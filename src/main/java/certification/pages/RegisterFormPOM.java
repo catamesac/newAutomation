@@ -1,0 +1,110 @@
+package certification.pages;
+
+
+import org.junit.Assert;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+public class RegisterFormPOM {
+	
+	 static WebDriver driver;
+	 private static By NAME = By.name("firstname");
+	 private static By LASTNAME  = By.name("lastname");
+	 private static By EMAIL = By.name("reg_email__");
+	 private static By PASSWORD = By.name("reg_passwd__");
+	 private static By BIRTHDAYDATE = By.name("birthdate");
+	 private static By CREATE_ACCOUNT_BUTTON = By.id("u_0_2");
+	 
+
+	
+	public static void openBrowser(String url) throws InterruptedException {		
+		System.setProperty("webdriver.chrome.driver", "/Users/catalinamesa/Downloads/chromedriver");		
+		driver = new ChromeDriver();
+		driver.manage().window().maximize();
+		driver.get(url); 
+	}
+	
+	public static void searchWord(String name, String lastname, String email, String password,String birthdayDate, String sexGender) throws InterruptedException {						
+		
+		WebElement createAccount = driver.findElement(CREATE_ACCOUNT_BUTTON);
+		createAccount.click();
+		
+		WebElement TextBox = (new WebDriverWait(driver, 10))
+				.until(ExpectedConditions.visibilityOfElementLocated(NAME));
+		TextBox.sendKeys(name);
+		driver.findElement(LASTNAME).sendKeys(lastname);
+	    WebElement emailText = driver.findElement(EMAIL);	    
+	    if(emailText.isEnabled()) {
+	    	emailText.sendKeys(email);
+	    }	
+		driver.findElement(PASSWORD).sendKeys(password);	
+		WebElement birthday = (new WebDriverWait(driver, 10))
+				.until(ExpectedConditions.visibilityOfElementLocated(BIRTHDAYDATE)); 
+		
+	    if(birthday.isEnabled()) {
+	    	birthday.sendKeys(birthdayDate);
+	    }
+	    
+		switch(sexGender.toUpperCase()){
+		case "MUJER":
+			WebElement genderSelectionF = driver.findElement(By.xpath("//input[@name='woman' and @value='F']"));
+			genderSelectionF.click();
+			break;
+		case "HOMBRE":
+			WebElement genderSelectionM = driver.findElement(By.xpath("//input[@name='man' and @value='M']"));
+			genderSelectionM.click();
+			break;
+			
+		default:
+			System.out.println("GENDER UNDEFINED");
+		}	
+		
+	    Assert.assertEquals("Mujer",driver.findElement(By.xpath("//div[@class = 'radio']")).getText());    
+	    driver.findElement(CREATE_ACCOUNT_BUTTON).click();
+        driver.switchTo().alert().accept();
+		
+	}
+		
+
+	public static void testNameTextArea(String nameNull) {
+		WebElement TextBox = (new WebDriverWait(driver, 10)).until(ExpectedConditions.visibilityOfElementLocated(NAME));
+		TextBox.sendKeys(nameNull);
+	    driver.findElement(CREATE_ACCOUNT_BUTTON).click();
+	    Assert.assertEquals("El nombre es obligatorio",driver.findElement(By.xpath("//input[@name='firstname']//following::span[@class='error']")).getText());
+
+	}
+	
+	public static void testLastnameTextArea(String lastNameNull) {
+		WebElement TextBox = (new WebDriverWait(driver, 10)).until(ExpectedConditions.visibilityOfElementLocated(NAME));
+		TextBox.sendKeys(lastNameNull);
+	    driver.findElement(CREATE_ACCOUNT_BUTTON).click();
+	    Assert.assertEquals("El nombre es obligatorio",driver.findElement(By.xpath("//input[@name='firstname']//following::span[@class='error']")).getText());
+
+	}
+	
+	public static void testPasswordTextArea(String passwordNull) {
+		WebElement TextBox = (new WebDriverWait(driver, 10)).until(ExpectedConditions.visibilityOfElementLocated(PASSWORD));
+		TextBox.sendKeys(passwordNull);
+	    driver.findElement(CREATE_ACCOUNT_BUTTON).click();
+	    Assert.assertEquals("La constraseña es obligatoria",driver.findElement(By.xpath("//input[@name='password']//following::span[@class='error']")).getText());
+	}
+	
+	
+	public static void testEmailStructure(String emailWrongStructure) throws InterruptedException {		
+		WebElement TextBox = (new WebDriverWait(driver, 10)).until(ExpectedConditions.visibilityOfElementLocated(EMAIL));
+		TextBox.sendKeys(emailWrongStructure);
+	    driver.findElement(CREATE_ACCOUNT_BUTTON).click();
+	    Assert.assertEquals("El correo electrónico no es válido",driver.findElement(By.xpath("//input[@name='email']//following::span[contains(text(),'El correo electrónico no es válido')]")).getText());		
+	}
+	
+
+	
+	public static void closeBrowser() {
+		driver.close(); 
+	}
+
+}
