@@ -10,7 +10,7 @@ public class RegisterForm {
 	
 	String url = "https://www.facebook.com"; 
 	String name = "Camilo"; 
-	String lastname = "Mesa";
+	String lastname = "Marin";
 	String email = "cami_mesa2020@gmail.com"; 
 	String password = "GOLDENhorse2020";
 	String birthdayDate ="1984-08-24"; 
