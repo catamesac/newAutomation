@@ -16,7 +16,13 @@ public class RegisterFormPOM {
 	 private static By LASTNAME  = By.name("lastname");
 	 private static By EMAIL = By.name("reg_email__");
 	 private static By PASSWORD = By.name("reg_passwd__");
-	 private static By BIRTHDAYDATE = By.name("birthdate");
+	 private static By BIRTHDAYDATEBUTTON = By.name("birthday_day");
+	 private static By BIRTHDAYDATE = By.xpath("//parent::span[@class=\"_5k_4\"]//select[@id=\"day\"]//following::option[contains(text(),'12')]");
+	 private static By BIRTHDAYMONTHBUTTON = By.name("birthday_month");
+	 private static By BIRTHDAYMONTH = By.xpath("//parent::span[@class=\"_5k_4\"]//select[@id=\"month\"]//following::option[contains(text(),'oct')]");
+	 private static By BIRTHDAYYEARBUTTON = By.name("birthday_year");
+	 private static By BIRTHDAYYEAR = By.xpath("//parent::span[@class=\"_5k_4\"]//select[@id=\"year\"]//following::option[contains(text(),'1984')]");
+	 
 	 private static By CREATE_ACCOUNT_BUTTON = By.id("u_0_2");
 	 
 
@@ -41,21 +47,37 @@ public class RegisterFormPOM {
 	    if(emailText.isEnabled()) {
 	    	emailText.sendKeys(email);
 	    }	
-		driver.findElement(PASSWORD).sendKeys(password);	
+		driver.findElement(PASSWORD).sendKeys(password);
+		
+		WebElement bithdayDateButton = driver.findElement(BIRTHDAYDATEBUTTON);
+		bithdayDateButton.click();
+		
 		WebElement birthday = (new WebDriverWait(driver, 10))
 				.until(ExpectedConditions.visibilityOfElementLocated(BIRTHDAYDATE)); 
+		birthday.click();
 		
-	    if(birthday.isEnabled()) {
-	    	birthday.sendKeys(birthdayDate);
-	    }
+		WebElement bithdayMonthButton = driver.findElement(BIRTHDAYMONTHBUTTON);
+		bithdayMonthButton.click();
+		
+		WebElement birthdayMonth = (new WebDriverWait(driver, 10))
+				.until(ExpectedConditions.visibilityOfElementLocated(BIRTHDAYMONTH)); 
+		birthdayMonth.click();
+		
+		WebElement bithdayYearButton = driver.findElement(BIRTHDAYYEARBUTTON);
+		bithdayYearButton.click();
+		
+		WebElement birthdayYear = (new WebDriverWait(driver, 10))
+				.until(ExpectedConditions.visibilityOfElementLocated(BIRTHDAYYEAR)); 
+		birthdayYear.click();
+
 	    
 		switch(sexGender.toUpperCase()){
 		case "MUJER":
-			WebElement genderSelectionF = driver.findElement(By.xpath("//input[@name='woman' and @value='F']"));
+			WebElement genderSelectionF = driver.findElement(By.xpath("//input[@name='sex' and @value='1']"));
 			genderSelectionF.click();
 			break;
 		case "HOMBRE":
-			WebElement genderSelectionM = driver.findElement(By.xpath("//input[@name='man' and @value='M']"));
+			WebElement genderSelectionM = driver.findElement(By.xpath("//input[@name='sex' and @value='2']"));
 			genderSelectionM.click();
 			break;
 			
@@ -63,9 +85,7 @@ public class RegisterFormPOM {
 			System.out.println("GENDER UNDEFINED");
 		}	
 		
-	    Assert.assertEquals("Mujer",driver.findElement(By.xpath("//div[@class = 'radio']")).getText());    
-	    driver.findElement(CREATE_ACCOUNT_BUTTON).click();
-        driver.switchTo().alert().accept();
+	    Assert.assertEquals("Mujer",driver.findElement(By.xpath("//span[@class='_5k_2 _5dba']")).getText());    
 		
 	}
 		
